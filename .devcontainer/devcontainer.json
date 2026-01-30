@@ -1,0 +1,16 @@
+{
+  "name": "OpenClaw Codespace",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "forwardPorts": [18789],
+  "postCreateCommand": "pnpm install && pnpm ui:build && pnpm build",
+  "postStartCommand": "bash .devcontainer/start-codespace.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint"
+      ]
+    }
+  },
+  "remoteUser": "codespace"
+}
