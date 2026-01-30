@@ -98,6 +98,25 @@ pnpm openclaw onboard --install-daemon
 
 # Dev loop (auto-reload on TS changes)
 pnpm gateway:watch
+
+## Codespaces / single-command dev 💡
+
+If you're using GitHub Codespaces or a VS Code devcontainer and want one command to start both the backend and the UI, run:
+
+```bash
+pnpm install # first-time only
+pnpm run dev:codespace
+```
+
+This starts the UI dev server (available at `http://localhost:5173`) and the backend (build + run; default gateway port `18789`).
+
+Notes:
+- Expose/forward ports `5173` (UI) and `18789` (Gateway) in the Codespaces **Ports** panel if you want browser access from the host. You can also add a `postStartCommand` to your `.devcontainer/devcontainer.json` to run `pnpm run dev:codespace` automatically on Codespace start (optional).
+
+Troubleshooting:
+- If the Gateway exits with "Gateway auth is set to token, but no token is configured", run `pnpm openclaw onboard` to configure a token (recommended) or run `pnpm gateway:dev:reset` to reset the dev workspace and try again.
+- If you prefer a one-off dev run without persistent config, set `OPENCLAW_GATEWAY_TOKEN=<token>` in the same shell before `pnpm run dev:codespace`.
+
 ```
 
 Note: `pnpm openclaw ...` runs TypeScript directly (via `tsx`). `pnpm build` produces `dist/` for running via Node / the packaged `openclaw` binary.

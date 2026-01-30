@@ -90,6 +90,7 @@
     "release:check": "node --import tsx scripts/release-check.ts",
     "ui:install": "node scripts/ui.js install",
     "ui:dev": "node scripts/ui.js dev",
+    "dev:codespace": "concurrently \"pnpm ui:dev\" \"pnpm gateway:dev\"",
     "ui:build": "node scripts/ui.js build",
     "start": "node scripts/run-node.mjs",
     "openclaw": "node scripts/run-node.mjs",
@@ -213,6 +214,7 @@
     "node-llama-cpp": "3.15.0"
   },
   "devDependencies": {
+    "concurrently": "^8.2.0",
     "@grammyjs/types": "^3.23.0",
     "@lit-labs/signals": "^0.2.0",
     "@lit/context": "^1.1.6",
