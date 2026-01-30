@@ -111,7 +111,7 @@ pnpm run dev:codespace
 This starts the UI dev server (available at `http://localhost:5173`) and the backend (build + run; default gateway port `18789`).
 
 Notes:
-- Expose/forward ports `5173` (UI) and `18789` (Gateway) in the Codespaces **Ports** panel if you want browser access from the host. You can also add a `postStartCommand` to your `.devcontainer/devcontainer.json` to run `pnpm run dev:codespace` automatically on Codespace start (optional).
+- Expose/forward ports `5173` (UI) and `18789` (Gateway) in the Codespaces **Ports** panel if you want browser access from the host. The devcontainer is already configured to auto-start the dev servers: the Codespaces `postStartCommand` runs `.devcontainer/start-codespace.sh` which installs deps (if needed), ensures a dev gateway token, and starts `pnpm run dev:codespace` (UI + gateway). Ports `5173` (UI) and `19001` (gateway dev) are forwarded in the devcontainer configuration.
 
 Troubleshooting:
 - If the Gateway exits with "Gateway auth is set to token, but no token is configured", run `pnpm openclaw onboard` to configure a token (recommended) or run `pnpm gateway:dev:reset` to reset the dev workspace and try again.
