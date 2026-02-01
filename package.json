@@ -147,7 +147,8 @@
     "ui:build": "node scripts/ui.js build",
     "ui:dev": "node scripts/ui.js dev",
     "dev:codespace": "concurrently \"pnpm ui:dev\" \"pnpm gateway:dev\"",
-    "ui:install": "node scripts/ui.js install"
+    "ui:install": "node scripts/ui.js install",
+    "check:packagejson": "node scripts/validate-package-json.js"
   },
   "android:assemble": "cd apps/android && ./gradlew :app:assembleDebug",
   "android:install": "cd apps/android && ./gradlew :app:installDebug",

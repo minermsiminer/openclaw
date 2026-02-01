@@ -1,0 +1,23 @@
+name: 'Package JSON validation'
+
+on:
+  push:
+    paths:
+      - 'package.json'
+      - 'scripts/validate-package-json.js'
+  pull_request:
+    paths:
+      - 'package.json'
+      - 'scripts/validate-package-json.js'
+
+jobs:
+  validate-package-json:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run package.json validation
+        run: node scripts/validate-package-json.js
