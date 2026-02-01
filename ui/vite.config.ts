@@ -30,6 +30,25 @@ export default defineConfig(({ command }) => {
       host: true,
       port: 5173,
       strictPort: true,
+      // Proxy gateway WS/HTTP paths to the local gateway so the browser (served
+      // from Codespaces public host) can reach the gateway without exposing
+      // the gateway port. See docs: Vite proxy with ws: true.
+      proxy: {
+        // WebSocket proxy for control UI websocket upgrades.
+        "/gateway": {
+          target: "http://127.0.0.1:19001",
+          changeOrigin: true,
+          ws: true,
+          rewrite: (path) => path.replace(/^\/gateway/, ""),
+        },
+        // Proxy for canvas/media HTTP hosting paths
+        "/__openclaw__": {
+          target: "http://127.0.0.1:19001",
+          changeOrigin: true,
+          ws: false,
+          rewrite: (path) => path.replace(/^\/__openclaw__/, "/__openclaw__"),
+        },
+      },
     },
   };
 });

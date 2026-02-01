@@ -160,4 +160,18 @@ Notes:
 - `token` is stored in localStorage; `password` is kept in memory only.
 - Use `wss://` when the Gateway is behind TLS (Tailscale Serve, HTTPS proxy, etc.).
 
+### GitHub Codespaces / Codespaces preview
+
+When running the UI and Gateway inside GitHub Codespaces, ports are exposed via the Codespaces port proxy. Public preview hosts typically look like:
+
+- UI dev server (Vite on port 5173): `https://<codespace>-5173.github.dev/`
+- Gateway dev port (e.g. 19001): `https://<codespace>-19001.app.github.dev/`
+
+Practical notes:
+- The Control UI builds its default Gateway URL from `location.host`. If your UI is served from the UI host (5173) but the Gateway listens on a different port/host (19001), either:
+  - Open the Control UI at the gateway host so the token query param is honored: `https://<codespace>-19001.app.github.dev/?token=<gateway-token>`
+  - Or open the UI at the UI host and pass an explicit gateway URL and token: `https://<codespace>-5173.github.dev/?gatewayUrl=wss://<codespace>-19001.app.github.dev/gateway&token=<gateway-token>`
+- You may need to make the Gateway port public in the Codespaces **Ports** panel (click the port and select **Make public** / **Open in browser**). In our testing we manually enabled the port to be public so the preview host was reachable.
+- If you open the dashboard over plain HTTP (Codespaces preview can be HTTPS), you may need to set `gateway.controlUi.allowInsecureAuth: true` for token-only auth on non-secure contexts (dev only).
+
 Remote access setup details: [Remote access](/gateway/remote).

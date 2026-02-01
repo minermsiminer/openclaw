@@ -18,6 +18,10 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License"></a>
 </p>
 
+**IMPORTANT (CODESPACES):** **THIS REPOSITORY INCLUDES A DETAILED HOW‑TO FOR RUNNING OPENCLAW IN GITHUB CODESPACES.**
+
+- See `docs/platforms/codespaces.md` for a step‑by‑step guide that includes the exact commands, Codespaces preview URLs, port-public instructions, token examples, and pairing workflow we used while testing.
+
 **OpenClaw** is a *personal AI assistant* you run on your own devices.
 It answers you on the channels you already use (WhatsApp, Telegram, Slack, Discord, Google Chat, Signal, iMessage, Microsoft Teams, WebChat), plus extension channels like BlueBubbles, Matrix, Zalo, and Zalo Personal. It can speak and listen on macOS/iOS/Android, and can render a live Canvas you control. The Gateway is just the control plane — the product is the assistant.
 

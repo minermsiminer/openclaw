@@ -53,9 +53,19 @@ creates a device pairing request that must be approved.
 ### Approve a node device
 
 ```bash
+# List pending device pairing requests
 openclaw devices list
+
+# Approve a pending request (replace <requestId> with the request id shown)
 openclaw devices approve <requestId>
+
+# Reject a pending request
 openclaw devices reject <requestId>
+
+# If you're running from the repository/dev environment, prefix the command with pnpm
+pnpm openclaw devices list
+pnpm openclaw devices approve <requestId>
+pnpm openclaw devices reject <requestId>
 ```
 
 ### Where the state lives
