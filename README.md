@@ -18,6 +18,10 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License"></a>
 </p>
 
+**IMPORTANT (CODESPACES):** **THIS REPOSITORY INCLUDES A DETAILED HOW‑TO FOR RUNNING OPENCLAW IN GITHUB CODESPACES.**
+
+- See `docs/platforms/codespaces.md` for a step‑by‑step guide that includes the exact commands, Codespaces preview URLs, port-public instructions, token examples, and pairing workflow we used while testing.
+
 **OpenClaw** is a _personal AI assistant_ you run on your own devices.
 It answers you on the channels you already use (WhatsApp, Telegram, Slack, Discord, Google Chat, Signal, iMessage, Microsoft Teams, WebChat), plus extension channels like BlueBubbles, Matrix, Zalo, and Zalo Personal. It can speak and listen on macOS/iOS/Android, and can render a live Canvas you control. The Gateway is just the control plane — the product is the assistant.
 
@@ -99,6 +103,25 @@ pnpm openclaw onboard --install-daemon
 
 # Dev loop (auto-reload on TS changes)
 pnpm gateway:watch
+
+## Codespaces / single-command dev 💡
+
+If you're using GitHub Codespaces or a VS Code devcontainer and want one command to start both the backend and the UI, run:
+
+```bash
+pnpm install # first-time only
+pnpm run dev:codespace
+```
+
+This starts the UI dev server (available at `http://localhost:5173`) and the backend (build + run; default gateway port `18789`).
+
+Notes:
+- Expose/forward ports `5173` (UI) and `18789` (Gateway) in the Codespaces **Ports** panel if you want browser access from the host. The devcontainer is already configured to auto-start the dev servers: the Codespaces `postStartCommand` runs `.devcontainer/start-codespace.sh` which installs deps (if needed), ensures a dev gateway token, and starts `pnpm run dev:codespace` (UI + gateway). Ports `5173` (UI) and `19001` (gateway dev) are forwarded in the devcontainer configuration.
+
+Troubleshooting:
+- If the Gateway exits with "Gateway auth is set to token, but no token is configured", run `pnpm openclaw onboard` to configure a token (recommended) or run `pnpm gateway:dev:reset` to reset the dev workspace and try again.
+- If you prefer a one-off dev run without persistent config, set `OPENCLAW_GATEWAY_TOKEN=<token>` in the same shell before `pnpm run dev:codespace`.
+
 ```
 
 Note: `pnpm openclaw ...` runs TypeScript directly (via `tsx`). `pnpm build` produces `dist/` for running via Node / the packaged `openclaw` binary.

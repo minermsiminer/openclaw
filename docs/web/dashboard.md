@@ -39,6 +39,20 @@ Prefer localhost, Tailscale Serve, or an SSH tunnel.
 - **Token source**: `gateway.auth.token` (or `OPENCLAW_GATEWAY_TOKEN`); the UI stores it after first load.
 - **Not localhost**: use Tailscale Serve (tokenless if `gateway.auth.allowTailscale: true`), tailnet bind with a token, or an SSH tunnel. See [Web surfaces](/web).
 
+### GitHub Codespaces examples
+
+If you're using GitHub Codespaces (UI dev server + gateway in the same Codespace) the public preview hosts typically look like:
+
+- UI dev server: `https://<codespace>-5173.github.dev/`
+- Gateway dev port: `https://<codespace>-19001.app.github.dev/`
+
+Try one of the following to ensure the UI authenticates correctly:
+
+- Open the gateway host with the token: `https://<codespace>-19001.app.github.dev/?token=<gateway-token>`
+- Or open the UI host with explicit gateway + token: `https://<codespace>-5173.github.dev/?gatewayUrl=wss://<codespace>-19001.app.github.dev/gateway&token=<gateway-token>`
+
+Note: you may need to expose the Gateway port from Codespaces (Ports panel → click port → **Make public** / **Open in browser**). If you manually enabled the port to be public in Codespaces while testing, include that step in your notes so others know it may be required.
+
 ## If you see “unauthorized” / 1008
 
 - Run `openclaw dashboard` to get a fresh tokenized link.
