@@ -57,3 +57,4 @@ try {
   console.error('Error reading or validating package.json:', err.message);
   process.exit(2);
 }
+\n// CI trigger: touch to force workflow run
