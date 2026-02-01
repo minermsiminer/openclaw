@@ -20,4 +20,4 @@ jobs:
         with:
           node-version: '22'
       - name: Run package.json validation
-        run: node scripts/validate-package-json.js
+        run: node scripts/validate-package-json.cjs
