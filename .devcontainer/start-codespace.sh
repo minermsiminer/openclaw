@@ -27,7 +27,7 @@ fi
 
 # Kill processes that may hold dev ports to avoid port conflicts
 for port in 5173 19001 18789; do
-  if ss -ltn | rg ":${port}" >/dev/null 2>&1; then
+  if ss -ltn | grep -q ":${port}" >/dev/null 2>&1; then
     echo "[codespace] Port ${port} in use — attempting to kill owners"
     # Try to kill processes with fuser, fallback to lsof/kill
     if command -v fuser >/dev/null 2>&1; then
@@ -55,6 +55,21 @@ else
   node -e "const fs=require('fs'); const p=process.env.CONFIG_FILE; let j={}; if(fs.existsSync(p)){ try{ j=JSON.parse(fs.readFileSync(p,'utf8')) }catch(e){} } j.gateway=j.gateway||{}; j.gateway.auth=j.gateway.auth||{}; j.gateway.auth.token=process.env.OPENCLAW_GATEWAY_TOKEN; fs.writeFileSync(p, JSON.stringify(j,null,2)); console.log('[codespace] wrote token to', p);" 2>/dev/null || true
 fi
 
+# Write a small UI dev config so the running Vite dev server can auto-configure gateway URL + token
+UI_PUBLIC_DIR="ui/public"
+mkdir -p "${UI_PUBLIC_DIR}"
+DEV_CONFIG_FILE="${UI_PUBLIC_DIR}/dev-config.json"
+GATEWAY_PORT=19001
+cat > "${DEV_CONFIG_FILE}" <<'JSON'
+{
+  "gatewayPort": "__GATEWAY_PORT__",
+  "token": "__TOKEN__"
+}
+JSON
+# Replace placeholders safely
+perl -0777 -pe "s/__GATEWAY_PORT__/${GATEWAY_PORT}/g; s/__TOKEN__/${TOKEN}/g" -i "${DEV_CONFIG_FILE}" || sed -e "s|__GATEWAY_PORT__|${GATEWAY_PORT}|g" -e "s|__TOKEN__|${TOKEN}|g" "${DEV_CONFIG_FILE}"
+echo "[codespace] Wrote UI dev config to ${DEV_CONFIG_FILE}"
+
 export CONFIG_FILE="${CONFIG_FILE}"
 
 # Start both UI and gateway in dev mode (background)
@@ -70,7 +85,7 @@ fi
 # Wait for UI
 echo "[codespace] Waiting for UI on http://localhost:5173..."
 for i in {1..30}; do
-  if curl -s --head http://localhost:5173 | head -n1 | rg -q "HTTP/1.[01] [23].." >/dev/null 2>&1; then
+  if curl -s --head http://localhost:5173 | head -n1 | grep -qE "HTTP/1\.[01] [23]" >/dev/null 2>&1; then
     echo "[codespace] UI is up"
     break
   fi
@@ -81,7 +96,7 @@ done
 DEV_PORT=19001
 echo "[codespace] Waiting for Gateway on 127.0.0.1:${DEV_PORT}..."
 for i in {1..30}; do
-  if ss -ltn | rg -q ":${DEV_PORT}" >/dev/null 2>&1; then
+  if ss -ltn | grep -q ":${DEV_PORT}" >/dev/null 2>&1; then
     echo "[codespace] Gateway is listening on ${DEV_PORT}"
     break
   fi

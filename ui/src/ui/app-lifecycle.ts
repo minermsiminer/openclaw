@@ -50,8 +50,38 @@ export function handleConnected(host: LifecycleHost) {
   }
 }
 
-export function handleFirstUpdated(host: LifecycleHost) {
+export async function handleFirstUpdated(host: LifecycleHost) {
   observeTopbar(host as unknown as Parameters<typeof observeTopbar>[0]);
+
+  // Dev-only: attempt to fetch a local UI dev config (written by .devcontainer/start-codespace.sh)
+  try {
+    const res = await fetch("/dev-config.json", { cache: "no-store" });
+    if (res.ok) {
+      const cfg = await res.json();
+      const port = Number(cfg?.gatewayPort) || 19001;
+      const token = typeof cfg?.token === "string" ? cfg.token : "";
+      if (port || token) {
+        const proto = window.location.protocol === "https:" ? "wss" : "ws";
+        const gatewayUrl = `${proto}://${window.location.hostname}:${port}`;
+        // Apply settings (gatewayUrl + token) so the UI connects automatically in Codespaces
+        try {
+          // applySettings is safe here; import at top to avoid circulars
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          const { applySettings } = await import("./app-settings");
+          applySettings(host as unknown as Parameters<typeof applySettings>[0], {
+            ...host.settings,
+            gatewayUrl,
+            token,
+          });
+          console.log("[dev-config] applied gatewayUrl", gatewayUrl, "and token from /dev-config.json");
+        } catch (e) {
+          console.warn("[dev-config] failed to apply settings:", e);
+        }
+      }
+    }
+  } catch (e) {
+    // Not an error in production; keep quiet
+  }
 }
 
 export function handleDisconnected(host: LifecycleHost) {
