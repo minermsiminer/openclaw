@@ -4,11 +4,11 @@ on:
   push:
     paths:
       - 'package.json'
-      - 'scripts/validate-package-json.js'
+      - 'scripts/validate-package-json.cjs'
   pull_request:
     paths:
       - 'package.json'
-      - 'scripts/validate-package-json.js'
+      - 'scripts/validate-package-json.cjs'
 
 jobs:
   validate-package-json:
