@@ -118,6 +118,27 @@ pnpm openclaw devices list
 pnpm openclaw devices approve <requestId>
 ```
 
+### One-click Codespace (make it seamless)
+
+The repository includes a Codespace-ready devcontainer that already runs a build and a start script for you. When a Codespace is created the devcontainer's `postCreateCommand` will run:
+
+- `pnpm install --frozen-lockfile` (installs dependencies)
+- `pnpm check:packagejson` (sanity check for malformed package.json)
+- `pnpm ui:install` (ensure UI deps are present)
+- `pnpm ui:build` (build Control UI assets)
+- `pnpm build` (compile server/dist code)
+
+The `postStartCommand` runs `.devcontainer/start-codespace.sh`, which will start `pnpm run dev:codespace` in the background, persist a generated `OPENCLAW_GATEWAY_TOKEN` to `~/.openclaw-dev/openclaw.json` (unless you set `OPENCLAW_GATEWAY_TOKEN` via Codespaces secrets), and wait for the UI and Gateway to come up.
+
+**Important (Codespaces preview hosts):** When running inside GitHub Codespaces the start script also writes a small UI dev config at `ui/public/dev-config.json` containing `gatewayPort`, `token` and, when a Codespace name is detected, a `gatewayPreviewUrl` like `wss://<codespace>-19001.app.github.dev/gateway`. The Control UI will prefer `gatewayPreviewUrl` (if present) to avoid incorrect host:port combinations, so you do not need to guess or supply the gateway host manually.
+
+To make the experience fully one-click:
+
+- Add a repository secret named `OPENCLAW_GATEWAY_TOKEN` in the GitHub **Codespaces → Secrets** settings to provide a stable token (optional, if omitted a token will be generated and persisted to `~/.openclaw-dev/openclaw.json`).
+- Open the Codespace, wait a minute for the postCreate + postStart steps to finish, then open the forwarded UI and Gateway previews.
+
+This should make starting the repository in a Codespace behave as a true "one-click" dev experience. If you want, I can open a PR to add the small robustness fixes above (done) and a short troubleshooting blurb on what to check if ports or builds fail.
+
 ---
 
 ## Related docs
