@@ -60,9 +60,14 @@ export async function handleFirstUpdated(host: LifecycleHost) {
       const cfg = await res.json();
       const port = Number(cfg?.gatewayPort) || 19001;
       const token = typeof cfg?.token === "string" ? cfg.token : "";
-      if (port || token) {
-        const proto = window.location.protocol === "https:" ? "wss" : "ws";
-        const gatewayUrl = `${proto}://${window.location.hostname}:${port}`;
+      const preview = typeof cfg?.gatewayPreviewUrl === "string" && cfg.gatewayPreviewUrl.trim() ? cfg.gatewayPreviewUrl.trim() : null;
+      if (preview || port || token) {
+        // Prefer explicit preview URL (provided by Codespaces start script) because
+        // Codespaces exposes ports with preview hostnames (e.g. <codespace>-19001.app.github.dev).
+        const gatewayUrl = preview ?? (() => {
+          const proto = window.location.protocol === "https:" ? "wss" : "ws";
+          return `${proto}://${window.location.hostname}:${port}`;
+        })();
         // Apply settings (gatewayUrl + token) so the UI connects automatically in Codespaces
         try {
           // applySettings is safe here; import at top to avoid circulars

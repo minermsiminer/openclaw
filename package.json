@@ -146,7 +146,7 @@
     "tui:dev": "OPENCLAW_PROFILE=dev CLAWDBOT_PROFILE=dev node scripts/run-node.mjs --dev tui",
     "ui:build": "node scripts/ui.js build",
     "ui:dev": "node scripts/ui.js dev",
-    "dev:codespace": "concurrently \"pnpm ui:dev\" \"pnpm gateway:dev\"",
+    "dev:codespace": "concurrently \"pnpm ui:dev -- --host 0.0.0.0 --port 5173\" \"pnpm gateway:dev -- --bind lan\"",
     "ui:install": "node scripts/ui.js install",
     "check:packagejson": "node scripts/validate-package-json.cjs"
   },
@@ -216,7 +216,7 @@
   "tui:dev": "OPENCLAW_PROFILE=dev CLAWDBOT_PROFILE=dev node scripts/run-node.mjs --dev tui",
   "ui:build": "node scripts/ui.js build",
   "ui:dev": "node scripts/ui.js dev",
-  "dev:codespace": "concurrently \"pnpm ui:dev\" \"pnpm gateway:dev\"",
+  "dev:codespace": "concurrently \"pnpm ui:dev -- --host 0.0.0.0 --port 5173\" \"pnpm gateway:dev -- --bind lan\"",
   "ui:install": "node scripts/ui.js install",
   "dependencies": {
     "@agentclientprotocol/sdk": "0.13.1",
