@@ -18,6 +18,9 @@
       "visibility": "private"
     }
   },
+  "containerEnv": {
+    "OPENCLAW_AUTO_APPROVE": "1"
+  },
   "postCreateCommand": "pnpm install --frozen-lockfile && pnpm check:packagejson && pnpm ui:install && pnpm ui:build && pnpm build",
   "postStartCommand": "bash .devcontainer/start-codespace.sh",
   "customizations": {

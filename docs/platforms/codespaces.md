@@ -135,6 +135,7 @@ The `postStartCommand` runs `.devcontainer/start-codespace.sh`, which will start
 To make the experience fully one-click:
 
 - Add a repository secret named `OPENCLAW_GATEWAY_TOKEN` in the GitHub **Codespaces → Secrets** settings to provide a stable token (optional, if omitted a token will be generated and persisted to `~/.openclaw-dev/openclaw.json`).
+- The start script can auto-approve pending device pairing requests for developer convenience. This behavior is controlled by `OPENCLAW_AUTO_APPROVE` (default: **1** in the devcontainer). To disable auto-approval set `OPENCLAW_AUTO_APPROVE=0` in your Codespace environment or your devcontainer configuration.
 - Open the Codespace, wait a minute for the postCreate + postStart steps to finish, then open the forwarded UI and Gateway previews.
 
 This should make starting the repository in a Codespace behave as a true "one-click" dev experience. If you want, I can open a PR to add the small robustness fixes above (done) and a short troubleshooting blurb on what to check if ports or builds fail.
