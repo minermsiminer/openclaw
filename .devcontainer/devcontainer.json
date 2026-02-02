@@ -2,6 +2,22 @@
   "name": "OpenClaw Codespace",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
   "forwardPorts": [18789, 5173, 19001],
+  "portsAttributes": {
+    "5173": {
+      "label": "OpenClaw UI (Vite)",
+      "onAutoForward": "openBrowserPreview",
+      "visibility": "public"
+    },
+    "19001": {
+      "label": "OpenClaw Gateway (dev)",
+      "onAutoForward": "openBrowserPreview",
+      "visibility": "public"
+    },
+    "18789": {
+      "label": "OpenClaw Gateway (prod)",
+      "visibility": "private"
+    }
+  },
   "postCreateCommand": "pnpm install --frozen-lockfile && pnpm check:packagejson && pnpm ui:install && pnpm ui:build && pnpm build",
   "postStartCommand": "bash .devcontainer/start-codespace.sh",
   "customizations": {
