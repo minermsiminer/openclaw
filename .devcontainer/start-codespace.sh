@@ -93,16 +93,20 @@ else
     sleep 1
   done
 
-  # After gateway starts, auto-approve pending device pairing requests (dev convenience only)
-  echo "[codespace] Checking for pending device pairing requests..."
-  PENDING_IDS=$(pnpm --silent openclaw devices list --json --url ws://127.0.0.1:${GATEWAY_PORT}/gateway --token "${OPENCLAW_GATEWAY_TOKEN}" 2>/dev/null | node -e "const fs=require('fs'); const s=fs.readFileSync(0,'utf8').trim(); if(!s) process.exit(0); let arr=JSON.parse(s); if(!Array.isArray(arr)) arr=[arr]; const ids=arr.flatMap(x=>{ if(x?.state==='pending') return x?.id? [x.id]: (x?.request?.id? [x.request.id]:[]); const r = x?.request; if(r && (r?.state==='pending' || r?.status==='pending')) return [r.id||r.requestId]; return []; }); console.log(ids.join(' '));") || true
-  if [ -n "${PENDING_IDS:-}" ]; then
-    echo "[codespace] Approving pending device requests: ${PENDING_IDS}"
-    for id in ${PENDING_IDS}; do
-      pnpm --silent openclaw devices approve "$id" --url ws://127.0.0.1:${GATEWAY_PORT}/gateway --token "${OPENCLAW_GATEWAY_TOKEN}" || true
-    done
+  # After gateway starts, optionally auto-approve pending device pairing requests (dev convenience only)
+  if [ "${OPENCLAW_AUTO_APPROVE:-0}" = "1" ]; then
+    echo "[codespace] OPENCLAW_AUTO_APPROVE=1 -> checking for pending device pairing requests..."
+    PENDING_IDS=$(pnpm --silent openclaw devices list --json --url ws://127.0.0.1:${GATEWAY_PORT}/gateway --token "${OPENCLAW_GATEWAY_TOKEN}" 2>/dev/null | node -e "const fs=require('fs'); const s=fs.readFileSync(0,'utf8').trim(); if(!s) process.exit(0); let arr=JSON.parse(s); if(!Array.isArray(arr)) arr=[arr]; const ids=arr.flatMap(x=>{ if(x?.state==='pending') return x?.id? [x.id]: (x?.request?.id? [x.request.id]:[]); const r = x?.request; if(r && (r?.state==='pending' || r?.status==='pending')) return [r.id||r.requestId]; return []; }); console.log(ids.join(' '));") || true
+    if [ -n "${PENDING_IDS:-}" ]; then
+      echo "[codespace] Approving pending device requests: ${PENDING_IDS}"
+      for id in ${PENDING_IDS}; do
+        pnpm --silent openclaw devices approve "$id" --url ws://127.0.0.1:${GATEWAY_PORT}/gateway --token "${OPENCLAW_GATEWAY_TOKEN}" || true
+      done
+    else
+      echo "[codespace] No pending device requests found."
+    fi
   else
-    echo "[codespace] No pending device requests found."
+    echo "[codespace] OPENCLAW_AUTO_APPROVE not set (or not 1); skipping auto-approve of device pairings"
   fi
 fi
 
