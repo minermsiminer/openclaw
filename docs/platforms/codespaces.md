@@ -15,7 +15,7 @@ This page explains how to run the OpenClaw **Control UI (frontend)** and **Gatew
 
 1. Start the UI and Gateway inside the Codespace:
    - `pnpm ui:dev` (Vite dev server, default port **5173**)
-   - `OPENCLAW_GATEWAY_TOKEN=dev pnpm gateway:dev --bind lan --token dev` (Gateway on **19001**)
+   - `OPENCLAW_GATEWAY_TOKEN=dev pnpm run gateway:dev -- --bind lan --token dev` (Gateway on **19001**)
 
 2. In the Codespaces **Ports** panel, make the Gateway port (e.g. **19001**) public so you can open the preview host.
 
@@ -106,7 +106,7 @@ This makes the UI connect to `/gateway` on the UI host and lets the dev server u
 pnpm ui:dev
 
 # 2) Start Gateway (example uses a short dev token)
-OPENCLAW_GATEWAY_TOKEN=dev pnpm gateway:dev --bind lan --token dev
+OPENCLAW_GATEWAY_TOKEN=dev pnpm run gateway:dev -- --bind lan --token dev
 
 # 3) In GitHub Codespaces Ports panel: click port 19001 → Make public
 
