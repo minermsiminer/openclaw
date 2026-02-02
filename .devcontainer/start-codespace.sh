@@ -83,7 +83,7 @@ if ss -ltn | grep -q ":${GATEWAY_PORT}" >/dev/null 2>&1; then
   echo "[codespace] Gateway already listening on ${GATEWAY_PORT}"
 else
   echo "[codespace] Starting Gateway (dev) and logging to ${LOGFILE}"
-  nohup OPENCLAW_SKIP_CHANNELS=1 CLAWDBOT_SKIP_CHANNELS=1 node scripts/run-node.mjs --dev --bind lan gateway > "${LOGFILE}" 2>&1 &
+  nohup bash -lc 'OPENCLAW_SKIP_CHANNELS=1 CLAWDBOT_SKIP_CHANNELS=1 node scripts/run-node.mjs --dev gateway --bind lan --token "${OPENCLAW_GATEWAY_TOKEN}"' > "${LOGFILE}" 2>&1 &
   # wait up to 30s for gateway port
   for i in {1..30}; do
     if ss -ltn | grep -q ":${GATEWAY_PORT}" >/dev/null 2>&1; then
